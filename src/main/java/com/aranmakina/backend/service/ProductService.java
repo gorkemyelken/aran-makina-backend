@@ -45,4 +45,10 @@ public class ProductService {
         this.productRepository.deleteById(productId);
         return new SuccessResult("Ürün silindi.");
     }
+
+    public DataResult<ProductViewDTO> findById(Integer productId) {
+        Product product = this.productRepository.findByProductId(productId);
+        ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
+        return new SuccessDataResult<>(productViewDTO, "Ürün bulundu.");
+    }
 }

@@ -36,4 +36,9 @@ public class ProductController {
     public ResponseEntity<Result> delete(@RequestParam Integer productId){
         return new ResponseEntity<>(productService.delete(productId), HttpStatus.OK);
     }
+
+    @GetMapping("/{productId}")
+    public ResponseEntity<DataResult<ProductViewDTO>> findById(@PathVariable Integer productId){
+        return new ResponseEntity<>(productService.findById(productId), HttpStatus.OK);
+    }
 }
