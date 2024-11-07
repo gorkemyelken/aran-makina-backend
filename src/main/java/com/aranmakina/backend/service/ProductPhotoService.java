@@ -52,19 +52,23 @@ public class ProductPhotoService {
 
     public DataResult<ProductPhoto> savePhoto(MultipartFile file, Product product) {
         try {
-            // Dosya adı için benzersiz bir isim oluşturulur
-            String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
+            // Dosya adını normalize et
+            String originalFileName = file.getOriginalFilename();
+            String normalizedFileName = java.text.Normalizer
+                    .normalize(originalFileName, java.text.Normalizer.Form.NFD)
+                    .replaceAll("[^\\p{ASCII}]", "")
+                    .replaceAll("\\s", "_"); // Boşlukları alt çizgi ile değiştirir
+
+            String fileName = System.currentTimeMillis() + "_" + normalizedFileName;
             Path filePath = Paths.get(uploadDir, fileName);
 
-            // Dosya fiziksel olarak belirtilen dizine kaydedilir
+            // Dosyayı kaydet
             Files.copy(file.getInputStream(), filePath);
 
-            // ProductPhoto nesnesi oluşturulur ve kaydedilir
+            // ProductPhoto nesnesini oluştur ve kaydet
             ProductPhoto productPhoto = new ProductPhoto();
             productPhoto.setUrl("/img/product/" + fileName);
             productPhoto.setProduct(product);
-
-            // Fotoğrafı veritabanına kaydetme
             productPhotoRepository.save(productPhoto);
 
             return new SuccessDataResult<>(productPhoto, "Fotoğraf başarıyla kaydedildi.");
@@ -72,4 +76,5 @@ public class ProductPhotoService {
             return new ErrorDataResult<>("Fotoğraf kaydedilirken bir hata oluştu: " + e.getMessage());
         }
     }
+
 }
