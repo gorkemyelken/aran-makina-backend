@@ -17,5 +17,5 @@ public class ProductViewDTO {
     private String description;
     private Double price;
     private List<ProductFeatureViewDTO> features;
-    private List<String> photoUrls;
+    private List<String> photos;
 }
