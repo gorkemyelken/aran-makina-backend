@@ -29,16 +29,13 @@ public class ProductPhotoService {
 
     public DataResult<ProductPhoto> savePhoto(MultipartFile file, Product product) {
         try {
-            // Dosya adı oluşturma
             String fileName = System.currentTimeMillis() + "_" + file.getOriginalFilename();
             Path filePath = Paths.get(uploadDir, fileName);
 
-            // Dosyayı sunucuya kaydetme
             Files.copy(file.getInputStream(), filePath);
 
-            // ProductPhoto nesnesi oluşturma ve kaydetme
             ProductPhoto productPhoto = new ProductPhoto();
-            productPhoto.setUrl("/img/product/" + fileName); // URL oluşturma
+            productPhoto.setUrl("/img/product/" + fileName);
             productPhoto.setProduct(product);
             productPhotoRepository.save(productPhoto);
 
