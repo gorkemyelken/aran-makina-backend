@@ -36,8 +36,7 @@ public class ProductController {
         DataResult<ProductViewDTO> result = productService.add(productCreateDTO, photos);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
-
-
+    
     @DeleteMapping("/delete/{productId}")
     public ResponseEntity<Result> delete(@RequestParam Integer productId){
         return new ResponseEntity<>(productService.delete(productId), HttpStatus.OK);
