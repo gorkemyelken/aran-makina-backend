@@ -1,6 +1,7 @@
 package com.aranmakina.backend.dto.product;
 
 import com.aranmakina.backend.dto.productfeature.ProductFeatureViewDTO;
+import com.aranmakina.backend.dto.productphoto.ProductPhotoViewDTO;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,4 +17,5 @@ public class ProductViewDTO {
     private String description;
     private Double price;
     private List<ProductFeatureViewDTO> features;
+    private List<String> photoUrls;
 }

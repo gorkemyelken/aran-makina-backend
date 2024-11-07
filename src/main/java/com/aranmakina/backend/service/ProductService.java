@@ -4,10 +4,13 @@ import com.aranmakina.backend.dto.product.ProductCreateDTO;
 import com.aranmakina.backend.dto.product.ProductViewDTO;
 import com.aranmakina.backend.exception.results.*;
 import com.aranmakina.backend.model.Product;
+import com.aranmakina.backend.model.ProductPhoto;
 import com.aranmakina.backend.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -15,12 +18,14 @@ import java.util.stream.Collectors;
 public class ProductService {
 
     private final ProductRepository productRepository;
-
     private final ModelMapper modelMapper;
 
-    public ProductService(ProductRepository productRepository, ModelMapper modelMapper) {
+    private final ProductPhotoService productPhotoService;
+
+    public ProductService(ProductRepository productRepository, ModelMapper modelMapper, ProductPhotoService productPhotoService) {
         this.productRepository = productRepository;
         this.modelMapper = modelMapper;
+        this.productPhotoService = productPhotoService;
     }
 
     public DataResult<List<ProductViewDTO>> getAll() {
@@ -34,21 +39,37 @@ public class ProductService {
         return new SuccessDataResult<>(productViewDTOS, "Ürünler listelendi.");
     }
 
-    public DataResult<ProductViewDTO> add(ProductCreateDTO productCreateDTO) {
+    public DataResult<ProductViewDTO> add(ProductCreateDTO productCreateDTO, List<MultipartFile> photos) throws IOException {
         Product product = modelMapper.map(productCreateDTO, Product.class);
+
+        if (photos != null && !photos.isEmpty()) {
+            for (MultipartFile file : photos) {
+                DataResult<ProductPhoto> result = productPhotoService.savePhoto(file, product);
+                if (result.isSuccess()) {
+                    product.getPhotos().add(result.getData());
+                } else {
+                    return new ErrorDataResult<>("Fotoğraf eklenirken bir hata oluştu: " + result.getMessage());
+                }
+            }
+        }
+
         productRepository.save(product);
         ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
         return new SuccessDataResult<>(productViewDTO, "Ürün eklendi.");
     }
 
     public Result delete(Integer productId) {
-        this.productRepository.deleteById(productId);
+        productRepository.deleteById(productId);
         return new SuccessResult("Ürün silindi.");
     }
 
     public DataResult<ProductViewDTO> findById(Integer productId) {
-        Product product = this.productRepository.findByProductId(productId);
+        Product product = productRepository.findByProductId(productId);
+        if (product == null) {
+            return new ErrorDataResult<>("Ürün bulunamadı.");
+        }
         ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
         return new SuccessDataResult<>(productViewDTO, "Ürün bulundu.");
     }
 }
+
