@@ -28,13 +28,12 @@ public class ProductController {
     public ResponseEntity<DataResult<List<ProductViewDTO>>> getAll(){
         return new ResponseEntity<>(productService.getAll(), HttpStatus.OK);
     }
-
+    
     @PostMapping(value = "/add", consumes = {"multipart/form-data"})
     public ResponseEntity<DataResult<ProductViewDTO>> add(
-            @RequestPart("productCreateDTO") ProductCreateDTO productCreateDTO,
-            @RequestPart("photos") List<MultipartFile> photos) throws IOException {
-        DataResult<ProductViewDTO> result = productService.add(productCreateDTO, photos);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+            @RequestParam("photos") List<MultipartFile> photos,
+            @RequestBody ProductCreateDTO productCreateDTO) throws IOException {
+        return new ResponseEntity<>(productService.add(productCreateDTO, photos), HttpStatus.CREATED);
     }
 
     @DeleteMapping("/delete/{productId}")
