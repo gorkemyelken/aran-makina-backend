@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,8 +61,9 @@ public class ProductPhotoService {
                 Path filePath = Paths.get(uploadDir, fileName);
                 LOGGER.info("[addPhotosToProduct] filePath {}.", filePath);
                 try {
-                    // Dosya /tmp dizinine kaydedilir
-                    Files.copy(file.getInputStream(), filePath);
+                    Files.createDirectories(filePath.getParent()); // Hedef dizini oluşturur
+                    Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
                     LOGGER.info("[addPhotosToProduct] Dosya /tmp dizinine kaydedilir.");
                     // ProductPhoto nesnesi oluşturulur
                     ProductPhoto productPhoto = new ProductPhoto();
