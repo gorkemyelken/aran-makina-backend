@@ -1,15 +1,13 @@
 package com.aranmakina.backend.controller;
 
-import com.aranmakina.backend.dto.featurename.FeatureNameViewDTO;
+import com.aranmakina.backend.dto.user.UserCreateDTO;
 import com.aranmakina.backend.dto.user.UserViewDTO;
 import com.aranmakina.backend.exception.results.DataResult;
+import com.aranmakina.backend.exception.results.Result;
 import com.aranmakina.backend.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -27,5 +25,15 @@ public class UserController {
     @GetMapping
     public ResponseEntity<DataResult<List<UserViewDTO>>> getAll(){
         return new ResponseEntity<>(userService.getAll(), HttpStatus.OK);
+    }
+
+    @PostMapping("/add")
+    public ResponseEntity<DataResult<UserViewDTO>> addUser(@RequestBody UserCreateDTO userCreateDTO) {
+        return new ResponseEntity<>(userService.addUser(userCreateDTO), HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/delete/{userId}")
+    public ResponseEntity<Result> deleteUser(@PathVariable Integer userId) {
+        return new ResponseEntity<>(userService.deleteUser(userId), HttpStatus.OK);
     }
 }

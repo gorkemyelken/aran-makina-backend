@@ -1,6 +1,7 @@
 package com.aranmakina.backend.service;
 
 import com.aranmakina.backend.dto.product.ProductCreateDTO;
+import com.aranmakina.backend.dto.product.ProductUpdateDTO;
 import com.aranmakina.backend.dto.product.ProductViewDTO;
 import com.aranmakina.backend.exception.results.*;
 import com.aranmakina.backend.model.Product;
@@ -53,6 +54,23 @@ public class ProductService {
         }
         ProductViewDTO productViewDTO = modelMapper.map(product, ProductViewDTO.class);
         return new SuccessDataResult<>(productViewDTO, "Ürün bulundu.");
+    }
+
+    public DataResult<ProductViewDTO> update(Integer productId, ProductUpdateDTO productUpdateDTO) {
+        Product existingProduct = productRepository.findByProductId(productId);
+        if (existingProduct == null) {
+            return new ErrorDataResult<>("Ürün bulunamadı.");
+        }
+
+        existingProduct.setName(productUpdateDTO.getName());
+        existingProduct.setCategory(productUpdateDTO.getCategory());
+        existingProduct.setDescription(productUpdateDTO.getDescription());
+        existingProduct.setPrice(productUpdateDTO.getPrice());
+
+        productRepository.save(existingProduct);
+        ProductViewDTO updatedProductViewDTO = modelMapper.map(existingProduct, ProductViewDTO.class);
+
+        return new SuccessDataResult<>(updatedProductViewDTO, "Ürün güncellendi.");
     }
 }
 

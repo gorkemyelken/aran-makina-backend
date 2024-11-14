@@ -1,11 +1,8 @@
 package com.aranmakina.backend.service;
 
-import com.aranmakina.backend.dto.featurename.FeatureNameViewDTO;
+import com.aranmakina.backend.dto.user.UserCreateDTO;
 import com.aranmakina.backend.dto.user.UserViewDTO;
-import com.aranmakina.backend.exception.results.DataResult;
-import com.aranmakina.backend.exception.results.ErrorDataResult;
-import com.aranmakina.backend.exception.results.SuccessDataResult;
-import com.aranmakina.backend.model.FeatureName;
+import com.aranmakina.backend.exception.results.*;
 import com.aranmakina.backend.model.User;
 import com.aranmakina.backend.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -18,7 +15,6 @@ import java.util.stream.Collectors;
 public class UserService {
 
     private final UserRepository userRepository;
-
     private final ModelMapper modelMapper;
 
     public UserService(UserRepository userRepository, ModelMapper modelMapper) {
@@ -32,5 +28,21 @@ public class UserService {
                 .map(user -> modelMapper.map(user, UserViewDTO.class))
                 .collect(Collectors.toList());
         return new SuccessDataResult<>(userViewDTOs, "Kullanıcılar listelendi.");
+    }
+
+    public DataResult<UserViewDTO> addUser(UserCreateDTO userCreateDTO) {
+        User user = modelMapper.map(userCreateDTO, User.class);
+        userRepository.save(user);
+        UserViewDTO userViewDTO = modelMapper.map(user, UserViewDTO.class);
+        return new SuccessDataResult<>(userViewDTO, "Kullanıcı eklendi.");
+    }
+
+    public Result deleteUser(Integer userId) {
+        if (userRepository.existsById(userId)) {
+            userRepository.deleteById(userId);
+            return new SuccessResult("Kullanıcı silindi.");
+        } else {
+            return new ErrorResult("Kullanıcı bulunamadı.");
+        }
     }
 }

@@ -1,6 +1,7 @@
 package com.aranmakina.backend.controller;
 
 import com.aranmakina.backend.dto.product.ProductCreateDTO;
+import com.aranmakina.backend.dto.product.ProductUpdateDTO;
 import com.aranmakina.backend.dto.product.ProductViewDTO;
 import com.aranmakina.backend.exception.results.DataResult;
 import com.aranmakina.backend.exception.results.Result;
@@ -54,5 +55,13 @@ public class ProductController {
     @GetMapping("/{productId}")
     public ResponseEntity<DataResult<ProductViewDTO>> findById(@PathVariable Integer productId){
         return new ResponseEntity<>(productService.findById(productId), HttpStatus.OK);
+    }
+
+    @PutMapping("/update/{productId}")
+    public ResponseEntity<DataResult<ProductViewDTO>> update(
+            @PathVariable Integer productId,
+            @RequestBody ProductUpdateDTO productUpdateDTO) {
+        DataResult<ProductViewDTO> result = productService.update(productId, productUpdateDTO);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

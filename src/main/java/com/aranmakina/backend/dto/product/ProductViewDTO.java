@@ -14,6 +14,7 @@ import java.util.List;
 public class ProductViewDTO {
     private Integer productId;
     private String name;
+    private String category;
     private String description;
     private Double price;
     private List<ProductFeatureViewDTO> features;
