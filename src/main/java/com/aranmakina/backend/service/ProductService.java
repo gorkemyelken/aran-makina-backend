@@ -34,7 +34,13 @@ public class ProductService {
             return new ErrorDataResult<>("Ürünler bulunamadı.");
         }
         List<ProductViewDTO> productViewDTOS = products.stream()
-                .map(product -> modelMapper.map(product, ProductViewDTO.class))
+                .map(product -> {
+                    ProductViewDTO dto = modelMapper.map(product, ProductViewDTO.class);
+                    if (product.getCategory() != null) {
+                        dto.setCategoryName(product.getCategory().getName()); // Category name'i al ve ata
+                    }
+                    return dto;
+                })
                 .collect(Collectors.toList());
         return new SuccessDataResult<>(productViewDTOS, "Ürünler listelendi.");
     }
