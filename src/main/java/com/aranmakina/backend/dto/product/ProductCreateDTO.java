@@ -1,5 +1,6 @@
 package com.aranmakina.backend.dto.product;
 
+import com.aranmakina.backend.model.CategoryType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -9,7 +10,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProductCreateDTO {
     private String name;
-    private String category;
+    private CategoryType category;
     private String description;
     private Double price;
 }

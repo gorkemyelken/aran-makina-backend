@@ -5,6 +5,7 @@ import com.aranmakina.backend.dto.product.ProductUpdateDTO;
 import com.aranmakina.backend.dto.product.ProductViewDTO;
 import com.aranmakina.backend.exception.results.DataResult;
 import com.aranmakina.backend.exception.results.Result;
+import com.aranmakina.backend.model.CategoryType;
 import com.aranmakina.backend.service.ProductPhotoService;
 import com.aranmakina.backend.service.ProductService;
 import org.springframework.http.HttpStatus;
@@ -63,5 +64,15 @@ public class ProductController {
             @RequestBody ProductUpdateDTO productUpdateDTO) {
         DataResult<ProductViewDTO> result = productService.update(productId, productUpdateDTO);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity<DataResult<List<ProductViewDTO>>> getByCategory(@RequestParam CategoryType category) {
+        return new ResponseEntity<>(productService.getProductsByCategory(category), HttpStatus.OK);
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<DataResult<List<ProductViewDTO>>> searchProducts(@RequestParam String keyword) {
+        return new ResponseEntity<>(productService.searchProducts(keyword), HttpStatus.OK);
     }
 }

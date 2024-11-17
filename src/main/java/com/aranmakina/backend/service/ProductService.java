@@ -4,6 +4,7 @@ import com.aranmakina.backend.dto.product.ProductCreateDTO;
 import com.aranmakina.backend.dto.product.ProductUpdateDTO;
 import com.aranmakina.backend.dto.product.ProductViewDTO;
 import com.aranmakina.backend.exception.results.*;
+import com.aranmakina.backend.model.CategoryType;
 import com.aranmakina.backend.model.Product;
 import com.aranmakina.backend.model.ProductPhoto;
 import com.aranmakina.backend.repository.ProductRepository;
@@ -72,5 +73,25 @@ public class ProductService {
 
         return new SuccessDataResult<>(updatedProductViewDTO, "Ürün güncellendi.");
     }
+
+    public DataResult<List<ProductViewDTO>> getProductsByCategory(CategoryType category) {
+        List<Product> products = productRepository.findByCategory(category);
+        if (products.isEmpty()) {
+            return new ErrorDataResult<>("Bu kategoride ürün yok.");
+        }
+        List<ProductViewDTO> productViewDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductViewDTO.class))
+                .collect(Collectors.toList());
+        return new SuccessDataResult<>(productViewDTOS, "Ürünler kategoriye göre listelendi.");
+    }
+
+    public DataResult<List<ProductViewDTO>> searchProducts(String keyword) {
+        List<Product> products = productRepository.searchByKeyword(keyword);
+        List<ProductViewDTO> productViewDTOS = products.stream()
+                .map(product -> modelMapper.map(product, ProductViewDTO.class))
+                .collect(Collectors.toList());
+        return new SuccessDataResult<>(productViewDTOS, "Ürünler kategoriye göre listelendi.");
+    }
+
 }
 
