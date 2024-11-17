@@ -91,11 +91,7 @@ public class ProductService {
 
         // Product'ları DTO'ya map'leyin
         List<ProductViewDTO> productViewDTOS = products.stream()
-                .map(product -> {
-                    ProductViewDTO dto = modelMapper.map(product, ProductViewDTO.class);
-                    dto.setCategoryName(product.getCategory().getName()); // DTO'da categoryName alanını ayarlayın
-                    return dto;
-                })
+                .map(product -> modelMapper.map(product, ProductViewDTO.class))
                 .collect(Collectors.toList());
 
         return new SuccessDataResult<>(productViewDTOS, "Ürünler kategoriye göre listelendi.");
