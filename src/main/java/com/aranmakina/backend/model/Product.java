@@ -19,8 +19,9 @@ public class Product {
 
     private String name;
 
-    @Enumerated(EnumType.STRING)
-    private CategoryType category;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     private String description;
     private Double price;
