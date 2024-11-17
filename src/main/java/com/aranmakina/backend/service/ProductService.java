@@ -90,7 +90,7 @@ public class ProductService {
         List<ProductViewDTO> productViewDTOS = products.stream()
                 .map(product -> modelMapper.map(product, ProductViewDTO.class))
                 .collect(Collectors.toList());
-        return new SuccessDataResult<>(productViewDTOS, "Ürünler kategoriye göre listelendi.");
+        return new SuccessDataResult<>(productViewDTOS, "Ürünler listelendi.");
     }
 
 }
