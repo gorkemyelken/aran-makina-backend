@@ -1,43 +1,49 @@
 package com.aranmakina.backend.controller;
 
+import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.ResponseEntity;
 
 import java.io.File;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/files")
-@CrossOrigin
 public class FileUploadController {
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFileToFTP(@RequestParam("file") MultipartFile file) {
+        FTPClient ftpClient = new FTPClient();
+
         try {
-            // Dosya yükleme işlemi
-            String filePath = "/img/product/" + file.getOriginalFilename();
-            // Dosyayı belirli bir dizine kaydetme işlemi
-            file.transferTo(new File(filePath));
+            // FTP Bağlantısını kur
+            ftpClient.connect("89.252.187.226", 21); // FTP sunucusunun adresini ve portunu gir
+            ftpClient.login("arancara", "Gorkem123"); // FTP kullanıcı adı ve şifresi
 
-            return ResponseEntity.ok(new UploadResponse("Dosya başarıyla yüklendi."));
-        } catch (Exception e) {
-            return ResponseEntity.status(500).body(new UploadResponse("Dosya yüklenirken bir hata oluştu."));
-        }
-    }
+            // FTP'ye yazma modunu ayarla
+            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            ftpClient.enterLocalPassiveMode();
 
-    public static class UploadResponse {
-        private String message;
+            // Dosyayı FTP sunucusuna yükle
+            boolean success = ftpClient.storeFile("/public_html/" + file.getOriginalFilename(), file.getInputStream());
 
-        public UploadResponse(String message) {
-            this.message = message;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
+            if (success) {
+                return ResponseEntity.ok("Dosya başarıyla yüklendi.");
+            } else {
+                return ResponseEntity.status(500).body("Dosya yüklenirken hata oluştu.");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("FTP bağlantısında bir hata oluştu.");
+        } finally {
+            try {
+                ftpClient.logout();
+                ftpClient.disconnect();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 }
