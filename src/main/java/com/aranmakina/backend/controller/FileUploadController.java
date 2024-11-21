@@ -8,6 +8,7 @@ import java.io.File;
 
 @RestController
 @RequestMapping("/api/files")
+@CrossOrigin
 public class FileUploadController {
 
     @PostMapping("/upload")
