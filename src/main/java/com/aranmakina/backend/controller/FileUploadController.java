@@ -50,7 +50,7 @@ public class FileUploadController {
                 logger.info("Dosya başarıyla yüklendi.");
 
                 // Fotoğraf URL'si ile ürünü güncelle
-                String photoUrl = "https://arancaraskal.com//images/" + file.getOriginalFilename();
+                String photoUrl = "https://arancaraskal.com/images/" + file.getOriginalFilename();
                 boolean isUpdated = productService.addProductPhoto(productId, photoUrl);
 
                 if (isUpdated) {
