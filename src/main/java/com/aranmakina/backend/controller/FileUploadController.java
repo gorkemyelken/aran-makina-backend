@@ -35,7 +35,7 @@ public class FileUploadController {
             ftpClient.enterLocalPassiveMode();
             logger.info("FTP sunucusunda dosya yazma modu ayarlandı.");
 
-            // Dosyayı FTP sunucusuna yükle
+            logger.info("Yükleme işlemi başlıyor: " + file.getOriginalFilename());
             boolean success = ftpClient.storeFile("/public_html/" + file.getOriginalFilename(), file.getInputStream());
 
             if (success) {
