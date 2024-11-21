@@ -112,6 +112,7 @@ public class ProductService {
         Product productOpt = productRepository.findByProductId(productId);
 
         ProductPhoto productPhoto = new ProductPhoto();
+        productPhoto.setProduct(productOpt);
         productPhoto.setUrl(photoUrl);
 
         productOpt.getPhotos().add(productPhoto);  // Fotoğraf ekleme işlemi
