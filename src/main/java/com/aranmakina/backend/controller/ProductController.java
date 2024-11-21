@@ -20,11 +20,9 @@ import java.util.List;
 public class ProductController {
 
     private final ProductService productService;
-    private final ProductPhotoService productPhotoService;
 
-    public ProductController(ProductService productService, ProductPhotoService productPhotoService) {
+    public ProductController(ProductService productService) {
         this.productService = productService;
-        this.productPhotoService = productPhotoService;
     }
 
     @GetMapping
@@ -36,14 +34,6 @@ public class ProductController {
     public ResponseEntity<DataResult<ProductViewDTO>> add(@RequestBody ProductCreateDTO productCreateDTO) {
         DataResult<ProductViewDTO> result = productService.add(productCreateDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
-
-    @PostMapping(value = "/{productId}/addPhotos", consumes = {"multipart/form-data"})
-    public ResponseEntity<Result> addPhotos(
-            @PathVariable Integer productId,
-            @RequestPart("photos") List<MultipartFile> photos) throws IOException {
-        Result result = productPhotoService.addPhotosToProduct(productId, photos);
-        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{productId}")
