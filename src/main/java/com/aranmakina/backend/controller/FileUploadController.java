@@ -5,6 +5,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.IOException;
 
@@ -47,8 +48,10 @@ public class FileUploadController {
         }
     }
 
-    // Yanıt formatı olarak JSON dönecek
+    // JSON formatında dönüş yapabilmesi için @JsonProperty ekliyoruz
     public static class UploadResponse {
+
+        @JsonProperty("message") // JSON'da "message" adıyla dönecek
         private String message;
 
         public UploadResponse(String message) {
