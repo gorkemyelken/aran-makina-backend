@@ -36,7 +36,7 @@ public class FileUploadController {
             logger.info("FTP sunucusunda dosya yazma modu ayarlandı.");
 
             logger.info("Yükleme işlemi başlıyor: " + file.getOriginalFilename());
-            boolean success = ftpClient.storeFile("/httpdocs/" + file.getOriginalFilename(), file.getInputStream());
+            boolean success = ftpClient.storeFile("/httpdocs/images" + file.getOriginalFilename(), file.getInputStream());
 
             if (success) {
                 logger.info("Dosya başarıyla yüklendi.");
