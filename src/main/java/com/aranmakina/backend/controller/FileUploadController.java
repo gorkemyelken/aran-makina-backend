@@ -2,15 +2,15 @@ package com.aranmakina.backend.controller;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.http.ResponseEntity;
 
-import java.io.File;
 import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/files")
+@CrossOrigin
 public class FileUploadController {
 
     @PostMapping("/upload")
