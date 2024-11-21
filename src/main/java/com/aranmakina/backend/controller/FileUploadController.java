@@ -30,13 +30,13 @@ public class FileUploadController {
             boolean success = ftpClient.storeFile("/public_html/" + file.getOriginalFilename(), file.getInputStream());
 
             if (success) {
-                return ResponseEntity.ok("Dosya başarıyla yüklendi.");
+                return ResponseEntity.ok(new UploadResponse("Dosya başarıyla yüklendi."));
             } else {
-                return ResponseEntity.status(500).body("Dosya yüklenirken hata oluştu.");
+                return ResponseEntity.status(500).body(new UploadResponse("Dosya yüklenirken hata oluştu."));
             }
         } catch (IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(500).body("FTP bağlantısında bir hata oluştu.");
+            return ResponseEntity.status(500).body(new UploadResponse("FTP bağlantısında bir hata oluştu."));
         } finally {
             try {
                 ftpClient.logout();
@@ -44,6 +44,23 @@ public class FileUploadController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    // Yanıt formatı olarak JSON dönecek
+    public static class UploadResponse {
+        private String message;
+
+        public UploadResponse(String message) {
+            this.message = message;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public void setMessage(String message) {
+            this.message = message;
         }
     }
 }
