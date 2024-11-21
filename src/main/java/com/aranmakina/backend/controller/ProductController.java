@@ -5,7 +5,6 @@ import com.aranmakina.backend.dto.product.ProductUpdateDTO;
 import com.aranmakina.backend.dto.product.ProductViewDTO;
 import com.aranmakina.backend.exception.results.DataResult;
 import com.aranmakina.backend.exception.results.Result;
-import com.aranmakina.backend.service.ProductPhotoService;
 import com.aranmakina.backend.service.ProductService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

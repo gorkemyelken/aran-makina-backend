@@ -1,9 +1,11 @@
 package com.aranmakina.backend.controller;
 
+import com.aranmakina.backend.service.ProductService;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,8 +19,12 @@ public class FileUploadController {
 
     private static final Logger logger = LoggerFactory.getLogger(FileUploadController.class);
 
+    @Autowired
+    private ProductService productService; // Veritabanına ürün ve fotoğraf eklemek için kullanılan servis
+
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFileToFTP(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFileToFTP(@RequestParam("file") MultipartFile file,
+                                             @RequestParam("productId") Integer productId) {
         FTPClient ftpClient = new FTPClient();
 
         logger.info("Dosya yükleme işlemi başlatıldı.");
@@ -35,12 +41,23 @@ public class FileUploadController {
             ftpClient.enterLocalPassiveMode();
             logger.info("FTP sunucusunda dosya yazma modu ayarlandı.");
 
+            // Dosyayı FTP sunucusuna yükle
+            String remoteFilePath = "/httpdocs/images/" + file.getOriginalFilename();
             logger.info("Yükleme işlemi başlıyor: " + file.getOriginalFilename());
-            boolean success = ftpClient.storeFile("/httpdocs/images" + file.getOriginalFilename(), file.getInputStream());
+            boolean success = ftpClient.storeFile(remoteFilePath, file.getInputStream());
 
             if (success) {
                 logger.info("Dosya başarıyla yüklendi.");
-                return ResponseEntity.ok(new UploadResponse("Dosya başarıyla yüklendi."));
+
+                // Fotoğraf URL'si ile ürünü güncelle
+                String photoUrl = "https://arancaraskal.com//images/" + file.getOriginalFilename();
+                boolean isUpdated = productService.addProductPhoto(productId, photoUrl);
+
+                if (isUpdated) {
+                    return ResponseEntity.ok(new UploadResponse("Dosya başarıyla yüklendi ve ürünle ilişkilendirildi."));
+                } else {
+                    return ResponseEntity.status(500).body(new UploadResponse("Fotoğraf ürüne eklenirken hata oluştu."));
+                }
             } else {
                 logger.error("Dosya yüklenirken hata oluştu.");
                 return ResponseEntity.status(500).body(new UploadResponse("Dosya yüklenirken hata oluştu."));

@@ -6,6 +6,7 @@ import com.aranmakina.backend.dto.product.ProductViewDTO;
 import com.aranmakina.backend.exception.results.*;
 import com.aranmakina.backend.model.Category;
 import com.aranmakina.backend.model.Product;
+import com.aranmakina.backend.model.ProductPhoto;
 import com.aranmakina.backend.repository.CategoryRepository;
 import com.aranmakina.backend.repository.ProductRepository;
 import org.modelmapper.ModelMapper;
@@ -104,6 +105,18 @@ public class ProductService {
                 .map(product -> modelMapper.map(product, ProductViewDTO.class))
                 .collect(Collectors.toList());
         return new SuccessDataResult<>(productViewDTOS, "Ürünler listelendi.");
+    }
+
+
+    public boolean addProductPhoto(Integer productId, String photoUrl) {
+        Product productOpt = productRepository.findByProductId(productId);
+
+        ProductPhoto productPhoto = new ProductPhoto();
+        productPhoto.setUrl(photoUrl);
+
+        productOpt.getPhotos().add(productPhoto);  // Fotoğraf ekleme işlemi
+        productRepository.save(productOpt); // Güncellenmiş ürünü kaydetme
+        return true;
     }
 
 }
