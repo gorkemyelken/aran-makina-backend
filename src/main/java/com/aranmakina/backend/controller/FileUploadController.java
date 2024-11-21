@@ -3,10 +3,10 @@ package com.aranmakina.backend.controller;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.Base64Utils;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
 @RestController
@@ -15,7 +15,11 @@ import java.io.IOException;
 public class FileUploadController {
 
     @PostMapping("/upload")
-    public ResponseEntity<?> uploadFileToFTP(@RequestParam("file") MultipartFile file) {
+    public ResponseEntity<?> uploadFileToFTP(@RequestBody FileUploadRequest request) {
+        // Base64 encoded file içeriyor
+        byte[] decodedFile = Base64Utils.decodeFromString(request.getFile());
+
+        // FTP işlemleri burada yapılacak
         FTPClient ftpClient = new FTPClient();
 
         try {
@@ -28,7 +32,7 @@ public class FileUploadController {
             ftpClient.enterLocalPassiveMode();
 
             // Dosyayı FTP sunucusuna yükle
-            boolean success = ftpClient.storeFile("/public_html/" + file.getOriginalFilename(), file.getInputStream());
+            boolean success = ftpClient.storeFile("/public_html/" + request.getFileName(), new ByteArrayInputStream(decodedFile));
 
             if (success) {
                 return ResponseEntity.ok(new UploadResponse("Dosya başarıyla yüklendi."));
@@ -48,10 +52,28 @@ public class FileUploadController {
         }
     }
 
-    // JSON formatında dönüş yapabilmesi için @JsonProperty ekliyoruz
-    public static class UploadResponse {
+    public static class FileUploadRequest {
+        private String file;
+        private String fileName;
 
-        @JsonProperty("message") // JSON'da "message" adıyla dönecek
+        public String getFile() {
+            return file;
+        }
+
+        public void setFile(String file) {
+            this.file = file;
+        }
+
+        public String getFileName() {
+            return fileName;
+        }
+
+        public void setFileName(String fileName) {
+            this.fileName = fileName;
+        }
+    }
+
+    public static class UploadResponse {
         private String message;
 
         public UploadResponse(String message) {
