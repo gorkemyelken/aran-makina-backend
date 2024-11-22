@@ -30,7 +30,7 @@ public class ProductService {
     }
 
     public DataResult<List<ProductViewDTO>> getAll() {
-        List<Product> products = productRepository.findAll();
+        List<Product> products = productRepository.findAllByOrderByPriorityDesc();
         if (products.isEmpty()) {
             return new ErrorDataResult<>("Ürünler bulunamadı.");
         }

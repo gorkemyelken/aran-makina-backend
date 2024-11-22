@@ -25,6 +25,7 @@ public class Product {
 
     private String description;
     private Double price;
+    private int priority;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ProductFeature> features = new ArrayList<>();

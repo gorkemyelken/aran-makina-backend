@@ -18,6 +18,7 @@ public class ProductViewDTO {
     private CategoryDTO category;
     private String description;
     private Double price;
+    private int priority;
     private List<ProductFeatureViewDTO> features;
     private List<ProductPhotoViewDTO> photos;
 }
