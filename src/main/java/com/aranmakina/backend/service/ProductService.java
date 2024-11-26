@@ -67,13 +67,27 @@ public class ProductService {
             return new ErrorDataResult<>("Ürün bulunamadı.");
         }
 
-        existingProduct.setName(productUpdateDTO.getName());
-        existingProduct.setCategory(productUpdateDTO.getCategory());
-        existingProduct.setDescription(productUpdateDTO.getDescription());
-        existingProduct.setPrice(productUpdateDTO.getPrice());
+        // Gelen bilgiler boş değilse mevcut bilgiyi güncelle
+        if (productUpdateDTO.getName() != null && !productUpdateDTO.getName().isEmpty()) {
+            existingProduct.setName(productUpdateDTO.getName());
+        }
+        if (productUpdateDTO.getCategory() != null) {
+            existingProduct.setCategory(productUpdateDTO.getCategory());
+        }
+        if (productUpdateDTO.getDescription() != null && !productUpdateDTO.getDescription().isEmpty()) {
+            existingProduct.setDescription(productUpdateDTO.getDescription());
+        }
+        if (productUpdateDTO.getPrice() != null) {
+            existingProduct.setPrice(productUpdateDTO.getPrice());
+        }
+        // Priority null kontrolü için varsayılan olarak mevcut değeri kullan
         existingProduct.setPriority(productUpdateDTO.getPriority());
 
+
+        // Değişiklikleri kaydet
         productRepository.save(existingProduct);
+
+        // Güncellenen ürünü DTO'ya map et
         ProductViewDTO updatedProductViewDTO = modelMapper.map(existingProduct, ProductViewDTO.class);
 
         return new SuccessDataResult<>(updatedProductViewDTO, "Ürün güncellendi.");
