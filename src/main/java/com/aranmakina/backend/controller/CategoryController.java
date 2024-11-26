@@ -1,7 +1,7 @@
 package com.aranmakina.backend.controller;
 
 import com.aranmakina.backend.dto.category.CategoryCreateDTO;
-import com.aranmakina.backend.dto.category.CategoryDTO;
+import com.aranmakina.backend.dto.category.CategoryViewDTO;
 import com.aranmakina.backend.exception.results.DataResult;
 import com.aranmakina.backend.exception.results.Result;
 import com.aranmakina.backend.service.CategoryService;
@@ -21,20 +21,20 @@ public class CategoryController {
     private CategoryService categoryService;
 
     @PostMapping("/create")
-    public ResponseEntity<DataResult<CategoryDTO>> createCategory(@RequestBody CategoryCreateDTO categoryCreateDTO) {
-        DataResult<CategoryDTO> result = categoryService.createCategory(categoryCreateDTO);
+    public ResponseEntity<DataResult<CategoryViewDTO>> createCategory(@RequestBody CategoryCreateDTO categoryCreateDTO) {
+        DataResult<CategoryViewDTO> result = categoryService.createCategory(categoryCreateDTO);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DataResult<CategoryDTO>> getCategoryById(@PathVariable Integer id) {
-        DataResult<CategoryDTO> result = categoryService.getCategoryById(id);
+    public ResponseEntity<DataResult<CategoryViewDTO>> getCategoryById(@PathVariable Integer id) {
+        DataResult<CategoryViewDTO> result = categoryService.getCategoryById(id);
         return ResponseEntity.ok(result);
     }
 
     @GetMapping
-    public ResponseEntity<DataResult<List<CategoryDTO>>> getAllCategories() {
-        DataResult<List<CategoryDTO>> result = categoryService.getAllCategories();
+    public ResponseEntity<DataResult<List<CategoryViewDTO>>> getAllCategories() {
+        DataResult<List<CategoryViewDTO>> result = categoryService.getAllCategories();
         return ResponseEntity.ok(result);
     }
 
@@ -42,5 +42,10 @@ public class CategoryController {
     public ResponseEntity<Result> deleteCategory(@PathVariable Integer id) {
         Result result = categoryService.deleteCategory(id);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping("/reorder")
+    public ResponseEntity<Result> reorderCategories(@RequestBody List<Integer> orderedCategoryIds) {
+        return new ResponseEntity<>(categoryService.reorderCategories(orderedCategoryIds), HttpStatus.OK);
     }
 }

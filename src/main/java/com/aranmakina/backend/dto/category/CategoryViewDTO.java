@@ -9,8 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryDTO {
+public class CategoryViewDTO {
     private Integer id;
     private String name;
     private String description;
+    private int priority;
 }

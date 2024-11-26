@@ -20,6 +20,8 @@ public class Category {
     private Integer id;
 
     private String name;
+
+    private int priority;
 }
 
 

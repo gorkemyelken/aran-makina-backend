@@ -13,5 +13,4 @@ public class ProductCreateDTO {
     private Category category;
     private String description;
     private Double price;
-    private int priority;
 }
