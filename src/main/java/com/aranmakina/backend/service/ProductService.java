@@ -71,6 +71,7 @@ public class ProductService {
         existingProduct.setCategory(productUpdateDTO.getCategory());
         existingProduct.setDescription(productUpdateDTO.getDescription());
         existingProduct.setPrice(productUpdateDTO.getPrice());
+        existingProduct.setPriority(productUpdateDTO.getPriority());
 
         productRepository.save(existingProduct);
         ProductViewDTO updatedProductViewDTO = modelMapper.map(existingProduct, ProductViewDTO.class);
