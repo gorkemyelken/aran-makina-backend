@@ -80,9 +80,6 @@ public class ProductService {
         if (productUpdateDTO.getPrice() != null) {
             existingProduct.setPrice(productUpdateDTO.getPrice());
         }
-        // Priority null kontrolü için varsayılan olarak mevcut değeri kullan
-        existingProduct.setPriority(productUpdateDTO.getPriority());
-
 
         // Değişiklikleri kaydet
         productRepository.save(existingProduct);
