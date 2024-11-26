@@ -32,7 +32,7 @@ public class CategoryService {
 
     // Read operation
     public DataResult<List<CategoryViewDTO>> getAllCategories() {
-        List<Category> categories = categoryRepository.findAll();
+        List<Category> categories = categoryRepository.findAllByOrderByPriorityDesc();
         if (categories.isEmpty()) {
             return new ErrorDataResult<>("Kategori bulunamadı.");
         }
