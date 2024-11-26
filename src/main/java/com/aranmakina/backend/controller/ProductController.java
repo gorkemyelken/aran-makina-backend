@@ -63,4 +63,9 @@ public class ProductController {
     public ResponseEntity<DataResult<List<ProductViewDTO>>> searchProducts(@RequestParam String keyword) {
         return new ResponseEntity<>(productService.searchProducts(keyword), HttpStatus.OK);
     }
+
+    @PostMapping("/reorder")
+    public ResponseEntity<Result> reorderProducts(@RequestBody List<Integer> orderedProductIds) {
+        return new ResponseEntity<>(productService.reorderProducts(orderedProductIds), HttpStatus.OK);
+    }
 }

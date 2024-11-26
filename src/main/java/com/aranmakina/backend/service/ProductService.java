@@ -147,5 +147,16 @@ public class ProductService {
         return false;
     }
 
+    public Result reorderProducts(List<Integer> orderedProductIds) {
+        int priority = orderedProductIds.size();
+        for (Integer productId : orderedProductIds) {
+            Product product = productRepository.findById(productId)
+                    .orElseThrow(() -> new RuntimeException("Ürün bulunamadı: " + productId));
+            product.setPriority(priority--);
+        }
+        productRepository.saveAll(productRepository.findAllById(orderedProductIds));
+        return new SuccessResult("Ürün sıralaması güncellendi.");
+    }
+
 }
 
