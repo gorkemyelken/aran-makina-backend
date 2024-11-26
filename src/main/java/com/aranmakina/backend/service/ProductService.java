@@ -120,5 +120,17 @@ public class ProductService {
         return true;
     }
 
+    public boolean removeProductPhoto(Integer productId, String photoUrl) {
+        Product product = productRepository.findByProductId(productId);
+
+        if (product != null) {
+            // Fotoğraf listesinden URL'yi kaldır
+            product.getPhotos().removeIf(photo -> photo.getUrl().equals(photoUrl));
+            productRepository.save(product); // Güncellenmiş ürünü kaydet
+            return true;
+        }
+        return false;
+    }
+
 }
 

@@ -76,6 +76,56 @@ public class FileUploadController {
         }
     }
 
+    // Yeni Fotoğraf Silme Metodu
+    @DeleteMapping("/delete")
+    public ResponseEntity<?> deleteFileFromFTP(@RequestParam("photoUrl") String photoUrl,
+                                               @RequestParam("productId") Integer productId) {
+        FTPClient ftpClient = new FTPClient();
+
+        logger.info("Fotoğraf silme işlemi başlatıldı. Fotoğraf URL: " + photoUrl);
+
+        try {
+            // FTP bağlantısını kur
+            logger.info("FTP sunucusuna bağlanıyor...");
+            ftpClient.connect("89.252.187.226", 21); // FTP sunucusunun adresini ve portunu gir
+            ftpClient.login("arancara", "Gorkem123"); // FTP kullanıcı adı ve şifresi
+            logger.info("FTP sunucusuna bağlanıldı.");
+
+            ftpClient.enterLocalPassiveMode();
+            String remoteFilePath = photoUrl.replace("https://arancaraskal.com", "/httpdocs");
+
+            // FTP sunucusundan dosyayı sil
+            boolean success = ftpClient.deleteFile(remoteFilePath);
+
+            if (success) {
+                logger.info("Fotoğraf başarıyla silindi: " + remoteFilePath);
+
+                // Veritabanından fotoğraf kaydını kaldır
+                boolean isUpdated = productService.removeProductPhoto(productId, photoUrl);
+
+                if (isUpdated) {
+                    return ResponseEntity.ok(new UploadResponse("Fotoğraf başarıyla silindi ve ürünle ilişkilendirme kaldırıldı."));
+                } else {
+                    return ResponseEntity.status(500).body(new UploadResponse("Fotoğraf veritabanından kaldırılırken hata oluştu."));
+                }
+            } else {
+                logger.error("Fotoğraf silinirken hata oluştu: " + remoteFilePath);
+                return ResponseEntity.status(500).body(new UploadResponse("Fotoğraf FTP sunucusundan silinirken hata oluştu."));
+            }
+        } catch (IOException e) {
+            logger.error("FTP bağlantısında bir hata oluştu: " + e.getMessage(), e);
+            return ResponseEntity.status(500).body(new UploadResponse("FTP bağlantısında bir hata oluştu."));
+        } finally {
+            try {
+                ftpClient.logout();
+                ftpClient.disconnect();
+                logger.info("FTP bağlantısı kapatıldı.");
+            } catch (IOException e) {
+                logger.error("FTP bağlantısı kapatılırken bir hata oluştu: " + e.getMessage(), e);
+            }
+        }
+    }
+
     // Yanıt formatı olarak JSON dönecek
     public static class UploadResponse {
         private String message;
