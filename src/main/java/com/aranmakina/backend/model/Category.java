@@ -22,6 +22,8 @@ public class Category {
     private String name;
 
     private int priority;
+
+    private String categoryPhotoUrl;
 }
 
 

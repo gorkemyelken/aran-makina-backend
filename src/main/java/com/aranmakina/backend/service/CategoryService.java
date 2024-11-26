@@ -4,7 +4,6 @@ import com.aranmakina.backend.dto.category.CategoryCreateDTO;
 import com.aranmakina.backend.dto.category.CategoryViewDTO;
 import com.aranmakina.backend.exception.results.*;
 import com.aranmakina.backend.model.Category;
-import com.aranmakina.backend.model.Product;
 import com.aranmakina.backend.repository.CategoryRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,6 +66,13 @@ public class CategoryService {
         }
         categoryRepository.saveAll(categoryRepository.findAllById(orderedCategoryIds));
         return new SuccessResult("Kategori sıralaması güncellendi.");
+    }
+
+    public boolean addCategoryPhoto(Integer categoryId, String photoUrl) {
+        Category categoryOpt = categoryRepository.findByCategoryId(categoryId);
+        categoryOpt.setCategoryPhotoUrl(photoUrl);
+        categoryRepository.save(categoryOpt); // Güncellenmiş ürünü kaydetme
+        return true;
     }
 }
 
