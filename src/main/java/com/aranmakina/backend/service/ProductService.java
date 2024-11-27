@@ -92,8 +92,7 @@ public class ProductService {
 
     public DataResult<List<ProductViewDTO>> getProductsByCategory(Integer categoryId) {
         // Verilen ID'ye göre Category'yi bulun
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Kategori bulunamadı."));
+        Category category = categoryRepository.findByCategoryId(categoryId);
 
         // Bu Category'ye ait Product'ları bulun
         List<Product> products = productRepository.findByCategory(category);
