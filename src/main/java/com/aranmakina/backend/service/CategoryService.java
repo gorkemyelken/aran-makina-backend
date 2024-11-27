@@ -42,8 +42,7 @@ public class CategoryService {
     }
 
     public DataResult<CategoryViewDTO> getCategoryById(Integer categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-                .orElseThrow(() -> new RuntimeException("Kategori bulunamadı."));
+        Category category = categoryRepository.findByCategoryId(categoryId);
         CategoryViewDTO categoryDTO = modelMapper.map(category, CategoryViewDTO.class);
         return new SuccessDataResult<>(categoryDTO, "Kategori başarıyla bulundu.");
     }

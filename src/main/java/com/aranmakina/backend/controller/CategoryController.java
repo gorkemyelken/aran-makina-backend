@@ -27,8 +27,8 @@ public class CategoryController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<DataResult<CategoryViewDTO>> getCategoryById(@PathVariable Integer id) {
-        DataResult<CategoryViewDTO> result = categoryService.getCategoryById(id);
+    public ResponseEntity<DataResult<CategoryViewDTO>> getCategoryById(@PathVariable Integer categoryId) {
+        DataResult<CategoryViewDTO> result = categoryService.getCategoryById(categoryId);
         return ResponseEntity.ok(result);
     }
 
@@ -39,8 +39,8 @@ public class CategoryController {
     }
 
     @DeleteMapping("/delete/{id}")
-    public ResponseEntity<Result> deleteCategory(@PathVariable Integer id) {
-        Result result = categoryService.deleteCategory(id);
+    public ResponseEntity<Result> deleteCategory(@PathVariable Integer categoryId) {
+        Result result = categoryService.deleteCategory(categoryId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
