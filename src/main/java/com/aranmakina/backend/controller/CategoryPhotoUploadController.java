@@ -42,7 +42,7 @@ public class CategoryPhotoUploadController {
             logger.info("FTP sunucusunda dosya yazma modu ayarlandı.");
 
             // Dosyayı FTP sunucusuna yükle
-            String remoteFilePath = "/httpdocs/images/category" + file.getOriginalFilename();
+            String remoteFilePath = "/httpdocs/images/category/" + file.getOriginalFilename();
             logger.info("Yükleme işlemi başlıyor: " + file.getOriginalFilename());
             boolean success = ftpClient.storeFile(remoteFilePath, file.getInputStream());
 
